@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Life OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   OBSIDIAN FOREST — Design System
+═══════════════════════════════════════════════ */
+:root {
+  --black:      #0B0B0B;
+  --s0:         #0F0F0F;
+  --s1:         #141414;
+  --s2:         #1A1A1A;
+  --s3:         #222222;
+  --s4:         #2C2C2C;
+
+–b0:         rgba(255,255,255,0.03);
+–b1:         rgba(255,255,255,0.07);
+–b2:         rgba(255,255,255,0.12);
+–b3:         rgba(255,255,255,0.20);
+
+–t0:         #EDECE5;
+–t1:         #A8A79E;
+–t2:         #78776E;
+–t3:         #52514A;
+
+–g1:         #4ADE80;
+–g2:         #22C55E;
+–g3:         #86EFAC;
+–g4:         #A3BFA0;
+–g5:         #2D4A35;
+–g6:         #0F2318;
+
+–cream:      #D8CCAC;
+–creamD:     rgba(216,204,172,0.10);
+
+–danger:     #E07070;
+–warn:       #C8A855;
+
+–r:          16px;
+–r-sm:       10px;
+–r-lg:       22px;
+–r-xl:       28px;
+–nav:        220px;
+–t-ease:     0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{height:100%;}
+body{
+font-family:‘DM Sans’,system-ui,sans-serif;
+background:var(–black);
+color:var(–t0);
+min-height:100vh;
+overflow-x:hidden;
+-webkit-font-smoothing:antialiased;
+}
+
+/* Grain */
+body::after{
+content:’’;position:fixed;inset:0;z-index:0;pointer-events:none;
+background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘300’ height=‘300’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘300’ height=‘300’ filter=‘url(%23noise)’ opacity=‘0.025’/%3E%3C/svg%3E”);
+}
+
+/* Ambient */
+body::before{
+content:’’;position:fixed;inset:0;z-index:0;pointer-events:none;
+background:
+radial-gradient(ellipse 60% 40% at 10% -5%, rgba(34,197,94,0.05) 0%,transparent 65%),
+radial-gradient(ellipse 40% 30% at 90% 105%, rgba(74,222,128,0.03) 0%,transparent 60%);
+}
+
+.shell{display:flex;min-height:100vh;position:relative;z-index:1;}
+
+/* ─── SIDEBAR ─── */
+.sidebar{
+width:var(–nav);flex-shrink:0;
+position:fixed;top:0;left:0;bottom:0;
+display:flex;flex-direction:column;
+padding:26px 14px 22px;
+border-right:1px solid var(–b1);
+background:rgba(11,11,11,0.97);
+backdrop-filter:blur(24px);
+-webkit-backdrop-filter:blur(24px);
+z-index:100;
+transition:transform var(–t-ease);
+}
+
+.logo{
+display:flex;align-items:center;gap:10px;
+padding:0 8px 22px;
+border-bottom:1px solid var(–b1);
+margin-bottom:18px;
+}
+.logo-mark{
+width:32px;height:32px;border-radius:9px;
+background:var(–g6);border:1px solid var(–g5);
+display:flex;align-items:center;justify-content:center;
+box-shadow:0 0 14px rgba(74,222,128,0.07);
+}
+.logo-mark svg{width:17px;height:17px;}
+.logo-name{font-size:15px;font-weight:600;letter-spacing:-.2px;color:var(–t0);}
+.logo-sub{font-size:10.5px;color:var(–t1);margin-top:1px;}
+
+.nav-group{margin-bottom:18px;}
+.nav-label{
+font-size:9px;font-weight:600;letter-spacing:1.8px;text-transform:uppercase;
+color:var(–t2);padding:0 10px;margin-bottom:3px;
+}
+.nav-link{
+display:flex;align-items:center;gap:9px;
+padding:9px 10px;border-radius:var(–r-sm);
+font-size:13px;font-weight:500;color:var(–t0);
+cursor:pointer;transition:all var(–t-ease);
+border:1px solid transparent;position:relative;
+}
+.nav-link:hover{color:var(–t0);background:var(–s2);}
+.nav-link:not(.active){color:var(–t1);}
+.nav-link.active{
+color:var(–g3);
+background:rgba(74,222,128,0.06);
+border-color:rgba(74,222,128,0.10);
+}
+.nav-link.active::before{
+content:’’;position:absolute;left:-14px;top:50%;transform:translateY(-50%);
+width:2px;height:14px;border-radius:0 2px 2px 0;
+background:var(–g1);box-shadow:0 0 6px var(–g1);
+}
+.nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;opacity:.75;}
+.nav-link.active .nav-icon{opacity:1;}
+
+.sidebar-foot{
+margin-top:auto;padding-top:14px;
+border-top:1px solid var(–b1);
+}
+.profile{
+display:flex;align-items:center;gap:9px;
+padding:7px 10px;border-radius:var(–r-sm);
+}
+.avatar{
+width:30px;height:30px;border-radius:50%;flex-shrink:0;
+background:var(–g6);border:1px solid var(–g5);
+display:flex;align-items:center;justify-content:center;
+font-size:12px;font-weight:600;color:var(–g3);
+}
+.pname{font-size:12.5px;font-weight:600;}
+.prole{font-size:10.5px;color:var(–t1);margin-top:1px;}
+
+/* ─── MAIN ─── */
+.main{
+flex:1;margin-left:var(–nav);
+padding:44px 40px 100px;
+min-width:0;position:relative;z-index:1;
+}
+
+.page{display:none;animation:fadeUp .38s cubic-bezier(.4,0,.2,1) both;}
+.page.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── PAGE HEADER ─── */
+.ph{margin-bottom:38px;}
+.ph-eyebrow{
+font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+color:var(–g4);margin-bottom:8px;
+}
+.ph-h{
+font-family:‘Cormorant Garamond’,Georgia,serif;
+font-size:46px;font-weight:300;letter-spacing:-1.5px;
+color:var(–t0);line-height:1;
+}
+.ph-sub{font-size:13.5px;color:var(–t1);margin-top:8px;}
+
+/* ─── GRIDS ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.ga{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;}
+
+/* ─── CARD ─── */
+.card{
+background:var(–s1);border:1px solid var(–b1);
+border-radius:var(–r-lg);padding:22px;
+transition:border-color var(–t-ease),box-shadow var(–t-ease);
+position:relative;overflow:hidden;
+}
+.card:hover{border-color:var(–b2);box-shadow:0 6px 28px rgba(0,0,0,0.35);}
+.card.gtint{
+border-color:rgba(74,222,128,0.09);
+background:linear-gradient(145deg,rgba(74,222,128,0.035) 0%,var(–s1) 55%);
+}
+.card.gtint::after{
+content:’’;position:absolute;top:-20px;right:-20px;width:90px;height:90px;
+background:radial-gradient(circle,rgba(74,222,128,0.06),transparent 70%);
+pointer-events:none;
+}
+.card-label{
+font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;
+color:var(–t1);margin-bottom:16px;
+}
+
+/* ─── SECTION ─── */
+.sec{margin-bottom:30px;}
+.sec-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.sec-title{font-size:16px;font-weight:600;letter-spacing:-.3px;}
+
+/* ─── NUMBERS ─── */
+.n-xl{
+font-family:‘Cormorant Garamond’,Georgia,serif;
+font-size:60px;font-weight:300;letter-spacing:-2px;line-height:1;
+}
+.n-lg{
+font-family:‘Cormorant Garamond’,Georgia,serif;
+font-size:46px;font-weight:300;letter-spacing:-1.5px;line-height:1;
+}
+.n-g{color:var(–g1);}
+.n-c{color:var(–cream);}
+.n-sub{font-size:12px;color:var(–t1);margin-top:5px;}
+
+/* ─── PILL ─── */
+.pill{
+display:inline-flex;align-items:center;gap:4px;
+padding:2px 9px;border-radius:100px;
+font-size:10.5px;font-weight:500;
+}
+.pill-g{background:rgba(74,222,128,0.09);color:var(–g3);border:1px solid rgba(74,222,128,0.14);}
+.pill-r{background:rgba(224,112,112,0.09);color:var(–danger);border:1px solid rgba(224,112,112,0.14);}
+.pill-y{background:rgba(200,168,85,0.09);color:var(–warn);border:1px solid rgba(200,168,85,0.14);}
+.pill-n{background:var(–s3);color:var(–t1);border:1px solid var(–b1);}
+
+/* ─── INPUTS ─── */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px;}
+.field-label{font-size:9.5px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(–t1);}
+.inp{
+width:100%;background:var(–s2);
+border:1px solid var(–b1);border-radius:var(–r-sm);
+color:var(–t0);font-family:‘DM Sans’,sans-serif;
+font-size:13.5px;padding:10px 13px;outline:none;
+transition:border-color var(–t-ease),box-shadow var(–t-ease);resize:none;
+}
+.inp:focus{border-color:rgba(74,222,128,0.28);box-shadow:0 0 0 3px rgba(74,222,128,0.05);}
+.inp::placeholder{color:var(–t2);}
+textarea.inp{min-height:70px;}
+select.inp{cursor:pointer;}
+option{background:#1a1a1a;color:#ededea;}
+.row{display:flex;gap:10px;flex-wrap:wrap;}
+.row .field{flex:1;min-width:110px;}
+
+/* ─── BUTTONS ─── */
+.btn{
+display:inline-flex;align-items:center;gap:6px;
+padding:9px 17px;border-radius:var(–r-sm);
+font-size:13px;font-weight:500;font-family:‘DM Sans’,sans-serif;
+border:1px solid transparent;cursor:pointer;
+transition:all var(–t-ease);
+}
+.btn-g{
+background:var(–g1);color:#071a0d;border-color:var(–g1);
+font-weight:600;
+}
+.btn-g:hover{background:var(–g3);box-shadow:0 4px 18px rgba(74,222,128,0.22);transform:translateY(-1px);}
+.btn-gh{background:transparent;color:var(–t1);border-color:var(–b1);}
+.btn-gh:hover{color:var(–t0);border-color:var(–b2);background:var(–s2);}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-xs{padding:4px 9px;font-size:11px;border-radius:7px;}
+.btn-d{background:transparent;color:var(–danger);border-color:rgba(224,112,112,0.18);}
+.btn-d:hover{background:rgba(224,112,112,0.07);}
+
+/* ─── PROGRESS BAR ─── */
+.pbar{height:2px;background:var(–s4);border-radius:2px;overflow:hidden;margin-top:14px;}
+.pbar-md{height:4px;border-radius:3px;}
+.pfill{height:100%;border-radius:2px;transition:width .5s ease;}
+
+/* ─── SLIDERS (score) ─── */
+.slider-row{
+display:flex;align-items:center;gap:11px;
+padding:8px 0;border-bottom:1px solid var(–b0);
+}
+.slider-row:last-child{border-bottom:none;}
+.slider-lbl{width:56px;font-size:11.5px;font-weight:500;color:var(–t1);flex-shrink:0;}
+input[type=range].sl{
+flex:1;-webkit-appearance:none;
+height:2px;border-radius:1px;outline:none;cursor:pointer;
+}
+input[type=range].sl::-webkit-slider-thumb{
+-webkit-appearance:none;
+width:14px;height:14px;border-radius:50%;
+background:var(–t0);box-shadow:0 1px 4px rgba(0,0,0,0.5);
+cursor:pointer;transition:transform .15s,box-shadow .15s;
+}
+input[type=range].sl::-webkit-slider-thumb:hover{
+transform:scale(1.2);
+box-shadow:0 0 0 3px rgba(74,222,128,0.13),0 1px 4px rgba(0,0,0,.5);
+}
+.slider-val{
+font-family:‘Cormorant Garamond’,serif;
+font-size:18px;font-weight:300;
+width:28px;text-align:right;flex-shrink:0;
+}
+
+/* ─── HABIT TRACKER ─── */
+.habit-wrap{overflow-x:auto;padding-bottom:4px;}
+.hdr-row{display:flex;padding-left:148px;gap:3px;margin-bottom:6px;}
+.hdr-d{width:20px;text-align:center;font-size:8.5px;font-weight:600;color:var(–t2);flex-shrink:0;}
+.h-row{display:flex;align-items:center;margin-bottom:4px;}
+.h-info{width:148px;flex-shrink:0;display:flex;align-items:center;gap:7px;padding-right:14px;}
+.h-emoji{font-size:13px;}
+.h-lbl{font-size:11.5px;font-weight:500;color:var(–t0);}
+.h-cells{display:flex;gap:3px;}
+.hc{
+width:20px;height:20px;border-radius:5px;
+background:var(–s3);border:1px solid var(–b0);
+cursor:pointer;flex-shrink:0;transition:all .13s;
+}
+.hc:hover:not(.hc-fut){border-color:var(–b2);transform:scale(1.12);}
+.hc.hc-on{border:none;}
+.hc.hc-fut{opacity:.15;cursor:not-allowed;}
+.h-stats{display:flex;align-items:center;gap:9px;margin-left:10px;flex-shrink:0;}
+.hstreak{font-size:10.5px;font-weight:600;color:var(–warn);}
+.hpct{font-size:10px;color:var(–t1);}
+
+/* ─── ROUTINE ─── */
+.r-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
+.r-item{
+display:flex;align-items:center;gap:12px;
+padding:14px 16px;border-radius:var(–r);
+border:1px solid var(–b1);background:var(–s1);
+cursor:pointer;transition:all var(–t-ease);user-select:none;
+}
+.r-item:hover{border-color:var(–b2);}
+.r-item.done{border-color:rgba(74,222,128,0.16);background:rgba(74,222,128,0.035);}
+.r-check{
+width:19px;height:19px;border-radius:50%;
+border:1.5px solid var(–b2);
+display:flex;align-items:center;justify-content:center;
+flex-shrink:0;font-size:9px;transition:all .18s;margin-left:auto;
+}
+.r-item.done .r-check{background:var(–g1);border-color:var(–g1);color:#071a0d;box-shadow:0 0 8px rgba(74,222,128,0.25);}
+.r-lbl{font-size:13.5px;font-weight:500;}
+.r-item.done .r-lbl{color:var(–g3);}
+.r-emo{font-size:18px;}
+
+/* ─── TRANSACTIONS ─── */
+.tx-list{display:flex;flex-direction:column;gap:5px;max-height:290px;overflow-y:auto;}
+.tx-list::-webkit-scrollbar{width:3px;}
+.tx-list::-webkit-scrollbar-thumb{background:var(–s4);border-radius:2px;}
+.tx-item{
+display:flex;align-items:center;gap:11px;
+padding:10px 13px;border:1px solid var(–b1);
+border-radius:var(–r);background:var(–s2);
+transition:border-color var(–t-ease);
+}
+.tx-item:hover{border-color:var(–b2);}
+.tx-ico{
+width:32px;height:32px;border-radius:8px;
+background:var(–s3);display:flex;align-items:center;
+justify-content:center;font-size:15px;flex-shrink:0;
+}
+.tx-inf{flex:1;min-width:0;}
+.tx-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tx-date{font-size:10.5px;color:var(–t1);margin-top:2px;}
+.tx-amt{
+font-family:‘Cormorant Garamond’,serif;
+font-size:18px;font-weight:400;flex-shrink:0;
+}
+.inc{color:var(–g1);}
+.exp{color:var(–danger);}
+.del-btn{
+background:none;border:none;color:var(–t3);cursor:pointer;
+width:24px;height:24px;border-radius:5px;flex-shrink:0;
+display:flex;align-items:center;justify-content:center;
+font-size:15px;transition:all .13s;
+}
+.del-btn:hover{color:var(–danger);background:rgba(224,112,112,0.09);}
+
+/* ─── SHOPPING ─── */
+.p-item{
+display:flex;align-items:center;gap:10px;
+padding:10px 13px;border:1px solid var(–b1);
+border-radius:var(–r);background:var(–s2);
+cursor:pointer;transition:all var(–t-ease);margin-bottom:5px;
+}
+.p-item:hover{border-color:var(–b2);}
+.p-item.bought{opacity:.4;}
+.p-item.bought .p-n{text-decoration:line-through;}
+.p-cb{
+width:17px;height:17px;border-radius:4px;
+border:1.5px solid var(–b2);flex-shrink:0;
+display:flex;align-items:center;justify-content:center;
+font-size:9px;transition:all .13s;
+}
+.p-item.bought .p-cb{background:var(–g2);border-color:var(–g2);color:#fff;}
+.p-n{flex:1;font-size:13px;font-weight:500;}
+.p-price{font-size:11.5px;color:var(–t1);}
+
+/* ─── LIFE RATINGS ─── */
+.r-row{display:flex;gap:5px;margin-top:4px;}
+.rd{
+width:28px;height:28px;border-radius:50%;
+border:1.5px solid var(–b2);
+display:flex;align-items:center;justify-content:center;
+cursor:pointer;font-size:10.5px;font-weight:600;
+color:var(–t1);background:var(–s2);
+transition:all .13s;
+}
+.rd:hover{border-color:var(–b3);color:var(–t0);transform:scale(1.07);}
+.rd.on{background:var(–g1);border-color:var(–g1);color:#071a0d;box-shadow:0 0 8px rgba(74,222,128,0.18);}
+
+/* ─── EMOTIONS ─── */
+.emo-wrap{display:flex;flex-wrap:wrap;gap:5px;}
+.ep{
+padding:4px 10px;border-radius:100px;
+font-size:11.5px;font-weight:500;
+border:1px solid var(–b1);background:var(–s2);
+cursor:pointer;color:var(–t1);transition:all .13s;
+}
+.ep:hover{border-color:var(–b2);color:var(–t0);}
+.ep.on{background:rgba(74,222,128,0.09);border-color:rgba(74,222,128,0.18);color:var(–g3);}
+
+/* ─── ROUTINE GOALS ─── */
+.goal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.goal-item{
+background:var(–s2);border:1px solid var(–b1);
+border-radius:var(–r);padding:14px 16px;
+transition:border-color var(–t-ease);
+}
+.goal-item:hover{border-color:var(–b2);}
+.goal-item-hd{
+display:flex;align-items:center;gap:8px;
+margin-bottom:8px;
+}
+.goal-emo{font-size:16px;}
+.goal-name{font-size:12px;font-weight:600;color:var(–t0);}
+.goal-inp{
+width:100%;background:transparent;border:none;border-bottom:1px solid var(–b1);
+color:var(–t0);font-family:‘DM Sans’,sans-serif;font-size:12.5px;
+padding:5px 0;outline:none;transition:border-color var(–t-ease);
+resize:none;min-height:52px;
+}
+.goal-inp:focus{border-bottom-color:rgba(74,222,128,0.35);}
+.goal-inp::placeholder{color:var(–t2);}
+
+.mobnav{
+display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;
+background:rgba(11,11,11,0.96);backdrop-filter:blur(20px);
+border-top:1px solid var(–b1);
+padding:10px 0 max(10px,env(safe-area-inset-bottom));
+justify-content:space-around;
+}
+.mn-item{
+display:flex;flex-direction:column;align-items:center;gap:2px;
+cursor:pointer;color:var(–t1);font-size:9.5px;font-weight:500;
+transition:color var(–t-ease);padding:0 10px;
+}
+.mn-item.active{color:var(–g1);}
+.mn-ico{font-size:19px;line-height:1;}
+
+.burger{
+display:none;position:fixed;top:14px;left:14px;z-index:150;
+background:var(–s2);border:1px solid var(–b2);
+border-radius:var(–r-sm);
+width:36px;height:36px;
+align-items:center;justify-content:center;
+cursor:pointer;font-size:15px;transition:all var(–t-ease);
+}
+.burger:hover{background:var(–s3);}
+
+/* ─── MODAL ─── */
+.overlay{
+position:fixed;inset:0;z-index:300;
+background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);
+display:none;align-items:center;justify-content:center;padding:20px;
+}
+.overlay.open{display:flex;animation:fadeUp .2s ease;}
+.modal{
+background:var(–s1);border:1px solid var(–b2);
+border-radius:var(–r-xl);padding:26px;
+width:100%;max-width:400px;
+box-shadow:0 20px 60px rgba(0,0,0,0.7);
+}
+.modal-h{
+font-family:‘Cormorant Garamond’,serif;
+font-size:26px;font-weight:300;letter-spacing:-.5px;
+margin-bottom:18px;
+}
+.modal-foot{display:flex;justify-content:flex-end;gap:7px;margin-top:18px;}
+
+/* ─── TOAST ─── */
+.toast-wrap{position:fixed;top:18px;right:18px;z-index:400;display:flex;flex-direction:column;gap:6px;}
+.toast{
+background:var(–s2);border:1px solid var(–b2);
+border-radius:var(–r);padding:10px 14px;
+font-size:12.5px;font-weight:500;color:var(–t0);
+box-shadow:0 6px 20px rgba(0,0,0,0.5);
+display:flex;align-items:center;gap:7px;
+animation:slideR .28s ease;
+}
+@keyframes slideR{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+
+/* ─── DIVIDER ─── */
+.div{height:1px;background:var(–b1);margin:18px 0;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(–s4);border-radius:2px;}
+
+@media(max-width:880px){
+.sidebar{transform:translateX(-100%);}
+.sidebar.open{transform:translateX(0);}
+.main{margin-left:0;padding:18px 16px 88px;}
+.mobnav{display:flex;}
+.burger{display:flex;}
+.g2,.g3{grid-template-columns:1fr;}
+.r-grid,.goal-grid{grid-template-columns:1fr;}
+}
+@media(max-width:520px){
+.ph-h{font-size:34px;}
+.hc{width:16px;height:16px;}
+.hdr-d{width:16px;font-size:7px;}
+.h-info{width:116px;}
+.hdr-row{padding-left:116px;}
+}
+</style>
+
+</head>
+<body>
+
+<div class="toast-wrap" id="toasts"></div>
+<button class="burger" id="burger" onclick="toggleSidebar()">☰</button>
+
+<div class="shell">
+
+<!-- ━━━━━━━━━━ SIDEBAR ━━━━━━━━━━ -->
+
+<nav class="sidebar" id="sidebar">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 17 17" fill="none">
+        <path d="M8.5 1.5L15 5.25V11.75L8.5 15.5L2 11.75V5.25L8.5 1.5Z" stroke="#4ADE80" stroke-width="1.1" fill="rgba(74,222,128,0.06)"/>
+        <circle cx="8.5" cy="8.5" r="2.5" fill="#4ADE80" opacity="0.5"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-name">Life OS</div>
+      <div class="logo-sub">Dashboard</div>
+    </div>
+  </div>
+
+  <div class="nav-group">
+    <div class="nav-label">Vue globale</div>
+    <div class="nav-link active" onclick="go('dashboard',this)">
+      <div class="nav-icon">◈</div>Dashboard
+    </div>
+    <div class="nav-link" onclick="go('routine',this)">
+      <div class="nav-icon">◎</div>Routine
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Tracking</div>
+    <div class="nav-link" onclick="go('habits',this)">
+      <div class="nav-icon">⊞</div>Habitudes
+    </div>
+    <div class="nav-link" onclick="go('finance',this)">
+      <div class="nav-icon">◇</div>Finance
+    </div>
+  </div>
+  <div class="nav-group">
+    <div class="nav-label">Sections de vie</div>
+    <div class="nav-link" onclick="go('body',this)">
+      <div class="nav-icon">⊙</div>Corps
+    </div>
+    <div class="nav-link" onclick="go('mind',this)">
+      <div class="nav-icon">◐</div>Esprit
+    </div>
+    <div class="nav-link" onclick="go('social',this)">
+      <div class="nav-icon">⊗</div>Social
+    </div>
+  </div>
+
+  <div class="sidebar-foot">
+    <div class="profile">
+      <div class="avatar">Y</div>
+      <div>
+        <div class="pname">Yanis</div>
+        <div class="prole">Seconde · Étudiant</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ━━━━━━━━━━ MAIN ━━━━━━━━━━ -->
+
+<main class="main">
+
+<!-- ══ DASHBOARD ══ -->
+
+<div class="page active" id="page-dashboard">
+  <div class="ph">
+    <div class="ph-eyebrow">Vue d'ensemble</div>
+    <div class="ph-h" id="dashTitle">Bonjour</div>
+    <div class="ph-sub" id="dashDate">—</div>
+  </div>
+
+  <div class="sec">
+    <div class="g3">
+      <div class="card gtint">
+        <div class="card-label">Score de vie</div>
+        <div class="n-xl n-g" id="kpiScore">—</div>
+        <div class="n-sub">sur 100 points</div>
+        <div class="pbar pbar-md"><div class="pfill" id="kpiScoreBar" style="background:var(--g1);width:0%"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Solde</div>
+        <div class="n-lg" id="kpiBalance">0</div>
+        <div class="n-sub">euros disponibles</div>
+        <div style="display:flex;gap:6px;margin-top:10px;">
+          <span class="pill pill-g" id="kpiInc">↑ 0€</span>
+          <span class="pill pill-r" id="kpiExp">↓ 0€</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Routine</div>
+        <div class="n-lg n-c" id="kpiRoutine">0/6</div>
+        <div class="n-sub">tâches complétées</div>
+        <div class="pbar pbar-md"><div class="pfill" id="kpiRoutineBar" style="background:var(--cream);width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="g2">
+      <div class="card">
+        <div class="card-label">Radar de vie</div>
+        <div style="position:relative;height:255px;"><canvas id="radarChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Modifier les scores</div>
+        <div id="slidersWrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-title">Habitudes — aujourd'hui</div>
+      <div class="pill pill-g" id="dashHabitBadge">0 / 6</div>
+    </div>
+    <div class="ga" id="dashHabits"></div>
+  </div>
+</div>
+
+<!-- ══ ROUTINE ══ -->
+
+<div class="page" id="page-routine">
+  <div class="ph">
+    <div class="ph-eyebrow">Chaque jour</div>
+    <div class="ph-h">Routine</div>
+    <div class="ph-sub" id="routineDate">—</div>
+  </div>
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-title">Aujourd'hui</div>
+      <div class="pill pill-g" id="routineBadge">0/6</div>
+    </div>
+    <div class="r-grid" id="routineGrid"></div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div class="card-label">Progression — 7 derniers jours</div>
+      <div style="position:relative;height:170px;"><canvas id="weekChart"></canvas></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-title">Objectifs par tâche</div>
+      <div class="pill pill-n" style="font-size:10px;">Modifiable</div>
+    </div>
+    <div class="goal-grid" id="goalGrid"></div>
+  </div>
+</div>
+
+<!-- ══ HABITS ══ -->
+
+<div class="page" id="page-habits">
+  <div class="ph">
+    <div class="ph-eyebrow">Consistency</div>
+    <div class="ph-h">Habitudes</div>
+    <div class="ph-sub" id="habitsMonthLbl">—</div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div class="habit-wrap" id="habitGrid"></div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-hd"><div class="sec-title">Stats du mois</div></div>
+    <div class="ga" id="habitStatGrid"></div>
+  </div>
+</div>
+
+<!-- ══ FINANCE ══ -->
+
+<div class="page" id="page-finance">
+  <div class="ph">
+    <div class="ph-eyebrow">Budget</div>
+    <div class="ph-h">Finance</div>
+    <div class="ph-sub">Revenus, dépenses, objectifs</div>
+  </div>
+  <div class="sec">
+    <div class="g2">
+      <div class="card gtint">
+        <div class="card-label">Solde total</div>
+        <div style="display:flex;align-items:baseline;gap:4px;">
+          <span style="font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--t2);">€</span>
+          <div class="n-lg" id="finBal">0.00</div>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;">
+          <span class="pill pill-g">↑ <span id="finInc">0</span>€ revenus</span>
+          <span class="pill pill-r">↓ <span id="finExp">0</span>€ dépenses</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Évolution du solde</div>
+        <div style="position:relative;height:105px;"><canvas id="finChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div class="card-label">Nouvelle transaction</div>
+      <div class="row">
+        <div class="field" style="flex:2;">
+          <label class="field-label">Description</label>
+          <input class="inp" id="txName" placeholder="Salaire, courses, abonnement…">
+        </div>
+        <div class="field" style="flex:0 0 120px;">
+          <label class="field-label">Montant (€)</label>
+          <input class="inp" id="txAmt" type="number" placeholder="0.00" min="0" step="0.01">
+        </div>
+        <div class="field" style="flex:0 0 120px;">
+          <label class="field-label">Type</label>
+          <select class="inp" id="txType">
+            <option value="income">↑ Revenu</option>
+            <option value="expense">↓ Dépense</option>
+          </select>
+        </div>
+        <div class="field" style="flex:0 0 130px;">
+          <label class="field-label">Catégorie</label>
+          <select class="inp" id="txCat">
+            <option>🍔 Nourriture</option>
+            <option>🎮 Loisirs</option>
+            <option>👕 Vêtements</option>
+            <option>📚 Études</option>
+            <option>🚌 Transport</option>
+            <option>💼 Travail</option>
+            <option>🎁 Autre</option>
+          </select>
+        </div>
+        <div class="field" style="flex:0 0 auto;justify-content:flex-end;">
+          <label class="field-label" style="visibility:hidden">.</label>
+          <button class="btn btn-g" onclick="addTx()">Ajouter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div class="sec-hd" style="margin-bottom:12px;">
+        <div class="sec-title">Historique</div>
+        <button class="btn btn-gh btn-xs" onclick="clearTx()">Tout effacer</button>
+      </div>
+      <div class="tx-list" id="txList">
+        <div style="text-align:center;padding:26px;color:var(--t2);font-size:13px;">Aucune transaction</div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="card">
+      <div class="sec-hd" style="margin-bottom:12px;">
+        <div class="sec-title">Liste d'achats</div>
+        <button class="btn btn-gh btn-xs" onclick="openPM()">+ Ajouter</button>
+      </div>
+      <div id="purchList">
+        <div style="text-align:center;padding:18px;color:var(--t2);font-size:13px;">Liste vide</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CORPS ══ -->
+
+<div class="page" id="page-body">
+  <div class="ph">
+    <div class="ph-eyebrow">Physique & Apparence</div>
+    <div class="ph-h">Corps</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-label">Cheveux</div>
+      <div class="field"><label class="field-label">État actuel</label><textarea class="inp" id="hair_s" placeholder="Longueur, coupe…" oninput="sL('hair_s')"></textarea></div>
+      <div class="field"><label class="field-label">Routine</label><textarea class="inp" id="hair_r" placeholder="Produits, fréquence…" oninput="sL('hair_r')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_hair"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Peau</div>
+      <div class="field"><label class="field-label">Type & problèmes</label><textarea class="inp" id="skin_s" placeholder="Grasse, acné, sèche…" oninput="sL('skin_s')"></textarea></div>
+      <div class="field"><label class="field-label">Routine soin</label><textarea class="inp" id="skin_r" placeholder="Nettoyant, hydratant…" oninput="sL('skin_r')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_skin"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Style</div>
+      <div class="field"><label class="field-label">Esthétique</label><textarea class="inp" id="style_v" placeholder="Streetwear, minimal…" oninput="sL('style_v')"></textarea></div>
+      <div class="field"><label class="field-label">Pièces clés</label><textarea class="inp" id="style_p" placeholder="Vêtements, marques…" oninput="sL('style_p')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_style"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Physique</div>
+      <div class="field"><label class="field-label">Objectif</label><textarea class="inp" id="phys_g" placeholder="Masse, sèche, endurance…" oninput="sL('phys_g')"></textarea></div>
+      <div class="field"><label class="field-label">Programme</label><textarea class="inp" id="phys_p" placeholder="Fréquence, exercices…" oninput="sL('phys_p')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_phys"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ESPRIT ══ -->
+
+<div class="page" id="page-mind">
+  <div class="ph">
+    <div class="ph-eyebrow">Mental & Émotions</div>
+    <div class="ph-h">Esprit</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-label">État émotionnel</div>
+      <div class="field"><label class="field-label">Ressenti du moment</label><div class="emo-wrap" id="emoRow"></div></div>
+      <div class="field" style="margin-top:10px;"><label class="field-label">Notes</label><textarea class="inp" id="emo_n" placeholder="Décris ton état…" oninput="sL('emo_n')"></textarea></div>
+      <div class="field"><label class="field-label">Score global</label><div class="r-row" id="rr_mg"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Problème principal</div>
+      <div class="field"><label class="field-label">Ce qui me pèse</label><textarea class="inp" style="min-height:85px;" id="mind_pb" placeholder="Ton plus grand problème…" oninput="sL('mind_pb')"></textarea></div>
+      <div class="field"><label class="field-label">Solutions</label><textarea class="inp" id="mind_sl" placeholder="Comment y faire face…" oninput="sL('mind_sl')"></textarea></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Routine mentale</div>
+      <div class="field"><label class="field-label">Pratiques quotidiennes</label><textarea class="inp" id="mind_rt" placeholder="Méditation, journaling…" oninput="sL('mind_rt')"></textarea></div>
+      <div class="field"><label class="field-label">Score discipline</label><div class="r-row" id="rr_md"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Vision & Affirmations</div>
+      <div class="field"><label class="field-label">Objectifs mentaux</label><textarea class="inp" id="mind_go" placeholder="Paix, concentration…" oninput="sL('mind_go')"></textarea></div>
+      <div class="field"><label class="field-label">Affirmations</label><textarea class="inp" id="mind_af" placeholder="Ce que tu te répètes…" oninput="sL('mind_af')"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SOCIAL ══ -->
+
+<div class="page" id="page-social">
+  <div class="ph">
+    <div class="ph-eyebrow">Relations</div>
+    <div class="ph-h">Social</div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-label">Copine / Relation</div>
+      <div class="field"><label class="field-label">Situation</label><textarea class="inp" id="soc_gf" placeholder="Single, en couple…" oninput="sL('soc_gf')"></textarea></div>
+      <div class="field"><label class="field-label">État de la relation</label><textarea class="inp" id="soc_gf2" placeholder="Comment ça se passe…" oninput="sL('soc_gf2')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_gf"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Famille</div>
+      <div class="field"><label class="field-label">Ambiance</label><textarea class="inp" id="soc_fm" placeholder="Relations à la maison…" oninput="sL('soc_fm')"></textarea></div>
+      <div class="field"><label class="field-label">À améliorer</label><textarea class="inp" id="soc_fm2" placeholder="Ce que tu veux changer…" oninput="sL('soc_fm2')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_fm"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Amis</div>
+      <div class="field"><label class="field-label">Ton cercle</label><textarea class="inp" id="soc_fr" placeholder="Proches, contacts…" oninput="sL('soc_fr')"></textarea></div>
+      <div class="field"><label class="field-label">Qualité des liens</label><textarea class="inp" id="soc_fr2" placeholder="Loyaux, authentiques…" oninput="sL('soc_fr2')"></textarea></div>
+      <div class="field"><label class="field-label">Score</label><div class="r-row" id="rr_fr"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Proximité sociale</div>
+      <div class="field"><label class="field-label">Ressenti</label><textarea class="inp" id="soc_px" placeholder="Proche ou isolé…" oninput="sL('soc_px')"></textarea></div>
+      <div class="field"><label class="field-label">Objectif social</label><textarea class="inp" id="soc_go" placeholder="Ce que tu veux développer…" oninput="sL('soc_go')"></textarea></div>
+      <div class="field"><label class="field-label">Score global</label><div class="r-row" id="rr_sc"></div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+
+<div class="mobnav" id="mobnav">
+  <div class="mn-item active" onclick="go('dashboard',this,'mn')"><div class="mn-ico">◈</div>Home</div>
+  <div class="mn-item" onclick="go('habits',this,'mn')"><div class="mn-ico">⊞</div>Habits</div>
+  <div class="mn-item" onclick="go('routine',this,'mn')"><div class="mn-ico">◎</div>Routine</div>
+  <div class="mn-item" onclick="go('finance',this,'mn')"><div class="mn-ico">◇</div>Finance</div>
+  <div class="mn-item" onclick="go('body',this,'mn')"><div class="mn-ico">⊙</div>Corps</div>
+</div>
+
+<!-- PURCHASE MODAL -->
+
+<div class="overlay" id="pmOverlay">
+  <div class="modal">
+    <div class="modal-h">Ajouter un achat</div>
+    <div class="field"><label class="field-label">Article</label><input class="inp" id="pName" placeholder="Nike, livre, abonnement…"></div>
+    <div class="field"><label class="field-label">Prix estimé (€)</label><input class="inp" id="pPrice" type="number" placeholder="0" min="0"></div>
+    <div class="modal-foot">
+      <button class="btn btn-gh btn-sm" onclick="closePM()">Annuler</button>
+      <button class="btn btn-g btn-sm" onclick="addPurch()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ STATE ═══ */
+const SKEY='lifeos_v4';
+let S={
+  scores:{esprit:70,travail:65,corps:75,social:60,sport:55},
+  txs:[],buys:[],habits:{},routine:{},life:{},ratings:{},emos:[],
+};
+const load=()=>{try{const r=localStorage.getItem(SKEY);if(r)S={...S,...JSON.parse(r)};}catch(e){}};
+const save=()=>{try{localStorage.setItem(SKEY,JSON.stringify(S));}catch(e){}};
+
+/* ═══ NAV ═══ */
+const MNM={dashboard:0,habits:1,routine:2,finance:3,body:4};
+function go(id,el,src){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(src==='mn'){
+    document.querySelectorAll('.mn-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');
+    document.querySelectorAll('.nav-link').forEach(i=>i.classList.remove('active'));
+  } else {
+    document.querySelectorAll('.nav-link').forEach(i=>i.classList.remove('active'));el.classList.add('active');
+    document.querySelectorAll('.mn-item').forEach(i=>i.classList.remove('active'));
+    if(MNM[id]!==undefined)document.querySelectorAll('.mn-item')[MNM[id]].classList.add('active');
+  }
+  if(window.innerWidth<=880)document.getElementById('sidebar').classList.remove('open');
+  if(id==='habits')renderHabits();
+  if(id==='finance'){renderTxs();renderFinChart();renderBuys();}
+  if(id==='routine'){renderRoutine();renderWeekChart();renderGoals();}
+  if(id==='dashboard')refreshDash();
+}
+const toggleSidebar=()=>document.getElementById('sidebar').classList.toggle('open');
+
+/* ═══ DATES ═══ */
+const MONTHS=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const WFULL=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const WS=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+const p2=n=>String(n).padStart(2,'0');
+const tds=()=>{const d=new Date();return`${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;};
+const fmtD=s=>{const d=new Date(s);return`${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)} ${d.getFullYear()}`;};
+function initDates(){
+  const n=new Date();
+  const s=`${WFULL[n.getDay()]}, ${n.getDate()} ${MONTHS[n.getMonth()]} ${n.getFullYear()}`;
+  ['dashDate','routineDate'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=s;});
+  const ml=document.getElementById('habitsMonthLbl');if(ml)ml.textContent=`${MONTHS[n.getMonth()]} ${n.getFullYear()}`;
+  const h=n.getHours();
+  const g=h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir';
+  const dt=document.getElementById('dashTitle');if(dt)dt.textContent=`${g}, Yanis`;
+}
+
+/* ═══ SCORES ═══ */
+const SM={
+  esprit: {label:'Esprit', color:'#A3BFA0'},
+  travail:{label:'Travail',color:'#4ADE80'},
+  corps:  {label:'Corps',  color:'#86EFAC'},
+  social: {label:'Social', color:'#D8CCAC'},
+  sport:  {label:'Sport',  color:'#22C55E'},
+};
+let radar=null;
+
+function buildRadar(){
+  const ctx=document.getElementById('radarChart').getContext('2d');
+  radar=new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:Object.keys(S.scores).map(k=>SM[k].label),
+      datasets:[{
+        data:Object.values(S.scores),
+        backgroundColor:'rgba(74,222,128,0.05)',
+        borderColor:'rgba(74,222,128,0.4)',
+        borderWidth:1.2,
+        pointBackgroundColor:Object.keys(S.scores).map(k=>SM[k].color),
+        pointBorderColor:'transparent',
+        pointRadius:4.5,fill:true,
+      }]
+    },
+    options:{
+      animation:{duration:300},responsive:true,maintainAspectRatio:false,
+      scales:{r:{
+        min:0,max:100,
+        ticks:{stepSize:25,color:'rgba(255,255,255,0.1)',backdropColor:'transparent',font:{size:8.5,family:'DM Sans'}},
+        grid:{color:'rgba(255,255,255,0.045)'},
+        angleLines:{color:'rgba(255,255,255,0.045)'},
+        pointLabels:{color:'#5E5D56',font:{size:10.5,family:'DM Sans',weight:'500'}},
+      }},
+      plugins:{legend:{display:false}},
+    }
+  });
+}
+
+function buildSliders(){
+  const w=document.getElementById('slidersWrap');w.innerHTML='';
+  Object.entries(S.scores).forEach(([k,v])=>{
+    const m=SM[k];
+    const d=document.createElement('div');d.className='slider-row';
+    d.innerHTML=`
+      <div class="slider-lbl">${m.label}</div>
+      <input type="range" class="sl" min="0" max="100" value="${v}"
+        style="background:linear-gradient(90deg,${m.color} ${v}%,rgba(255,255,255,0.05) ${v}%)"
+        oninput="updS('${k}',this.value,this)">
+      <div class="slider-val" style="color:${m.color}" id="sv_${k}">${v}</div>
+    `;
+    w.appendChild(d);
+  });
+}
+
+function updS(k,v,el){
+  S.scores[k]=parseInt(v);
+  const c=SM[k].color;
+  el.style.background=`linear-gradient(90deg,${c} ${v}%,rgba(255,255,255,0.05) ${v}%)`;
+  document.getElementById('sv_'+k).textContent=v;
+  if(radar){radar.data.datasets[0].data=Object.values(S.scores);radar.update();}
+  refreshScoreKPI();save();
+}
+
+function refreshScoreKPI(){
+  const vals=Object.values(S.scores);
+  const avg=Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  const e=document.getElementById('kpiScore');const b=document.getElementById('kpiScoreBar');
+  if(e)e.textContent=avg;if(b)b.style.width=avg+'%';
+}
+
+/* ═══ FINANCE ═══ */
+let finChart=null;
+function calcFin(){
+  let bal=0,inc=0,exp=0;
+  S.txs.forEach(t=>{if(t.type==='income'){bal+=t.amt;inc+=t.amt;}else{bal-=t.amt;exp+=t.amt;}});
+  return{bal,inc,exp};
+}
+function refreshFinKPI(){
+  const{bal,inc,exp}=calcFin();
+  ['finBal','kpiBalance'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=bal.toFixed(2);});
+  ['finInc'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=inc.toFixed(0);});
+  ['finExp'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=exp.toFixed(0);});
+  const ki=document.getElementById('kpiInc');if(ki)ki.textContent=`↑ ${inc.toFixed(0)}€`;
+  const ke=document.getElementById('kpiExp');if(ke)ke.textContent=`↓ ${exp.toFixed(0)}€`;
+}
+function addTx(){
+  const name=document.getElementById('txName').value.trim();
+  const amt=parseFloat(document.getElementById('txAmt').value);
+  const type=document.getElementById('txType').value;
+  const cat=document.getElementById('txCat').value;
+  if(!name||!amt||amt<=0){toast('Remplis tous les champs','⚠');return;}
+  S.txs.unshift({id:Date.now(),name,amt,type,cat,date:tds()});
+  document.getElementById('txName').value='';
+  document.getElementById('txAmt').value='';
+  renderTxs();renderFinChart();refreshFinKPI();save();
+  toast(type==='income'?`+${amt}€ ajouté`:`-${amt}€ dépensé`,type==='income'?'↑':'↓');
+}
+function delTx(id){S.txs=S.txs.filter(t=>t.id!==id);renderTxs();renderFinChart();refreshFinKPI();save();}
+function clearTx(){if(!confirm('Effacer tout ?'))return;S.txs=[];renderTxs();renderFinChart();refreshFinKPI();save();}
+function renderTxs(){
+  const c=document.getElementById('txList');if(!c)return;
+  if(!S.txs.length){c.innerHTML='<div style="text-align:center;padding:26px;color:var(--t2);font-size:13px;">Aucune transaction</div>';return;}
+  c.innerHTML=S.txs.slice(0,40).map(t=>`
+    <div class="tx-item">
+      <div class="tx-ico">${t.cat.split(' ')[0]}</div>
+      <div class="tx-inf">
+        <div class="tx-name">${t.name}</div>
+        <div class="tx-date">${fmtD(t.date)}</div>
+      </div>
+      <div class="tx-amt ${t.type==='income'?'inc':'exp'}">${t.type==='income'?'+':'-'}${t.amt.toFixed(2)}€</div>
+      <button class="del-btn" onclick="delTx(${t.id})">×</button>
+    </div>
+  `).join('');
+}
+function renderFinChart(){
+  const ctx=document.getElementById('finChart');if(!ctx)return;
+  const txs=[...S.txs].reverse().slice(-20);
+  let run=0;const labels=[],data=[];
+  txs.forEach(t=>{run+=t.type==='income'?t.amt:-t.amt;labels.push('');data.push(parseFloat(run.toFixed(2)));});
+  if(!labels.length){labels.push('');data.push(0);}
+  if(finChart){finChart.destroy();finChart=null;}
+  finChart=new Chart(ctx.getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[{data,borderColor:'#4ADE80',backgroundColor:'rgba(74,222,128,0.05)',borderWidth:1.5,fill:true,tension:0.45,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:250},
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{display:false},
+        y:{grid:{color:'rgba(255,255,255,0.035)'},ticks:{color:'#5E5D56',font:{size:9.5,family:'DM Sans'}},border:{display:false}},
+      }
+    }
+  });
+}
+
+/* ═══ PURCHASES ═══ */
+const openPM=()=>document.getElementById('pmOverlay').classList.add('open');
+const closePM=()=>document.getElementById('pmOverlay').classList.remove('open');
+function addPurch(){
+  const name=document.getElementById('pName').value.trim();
+  const price=parseFloat(document.getElementById('pPrice').value)||0;
+  if(!name){toast('Écris un nom','⚠');return;}
+  S.buys.push({id:Date.now(),name,price,done:false});
+  document.getElementById('pName').value='';
+  document.getElementById('pPrice').value='';
+  closePM();renderBuys();save();
+}
+function toggleBuy(id){const b=S.buys.find(x=>x.id===id);if(b)b.done=!b.done;renderBuys();save();}
+function delBuy(id){S.buys=S.buys.filter(b=>b.id!==id);renderBuys();save();}
+function renderBuys(){
+  const c=document.getElementById('purchList');if(!c)return;
+  if(!S.buys.length){c.innerHTML='<div style="text-align:center;padding:18px;color:var(--t2);font-size:13px;">Liste vide</div>';return;}
+  c.innerHTML=S.buys.map(b=>`
+    <div class="p-item ${b.done?'bought':''}" onclick="toggleBuy(${b.id})">
+      <div class="p-cb">${b.done?'✓':''}</div>
+      <div class="p-n">${b.name}</div>
+      ${b.price?`<div class="p-price">${b.price}€</div>`:''}
+      <button class="del-btn" onclick="event.stopPropagation();delBuy(${b.id})">×</button>
+    </div>
+  `).join('');
+}
+
+/* ═══ HABITS ═══ */
+const HABITS=[
+  {key:'sport',   label:'Sport',       emoji:'🏋️',color:'#4ADE80'},
+  {key:'nofap',   label:'NoFap',       emoji:'🔒',color:'#86EFAC'},
+  {key:'lecture', label:'Lecture',     emoji:'📚',color:'#A3BFA0'},
+  {key:'travail', label:'Travail',     emoji:'💼',color:'#D8CCAC'},
+  {key:'langues', label:'Langues',     emoji:'🌍',color:'#22C55E'},
+  {key:'hydra',   label:'Hydratation', emoji:'💧',color:'#6EE7B7'},
+];
+function renderHabits(){
+  const n=new Date();const Y=n.getFullYear(),M=n.getMonth(),TD=n.getDate();
+  const DIM=new Date(Y,M+1,0).getDate();
+  const c=document.getElementById('habitGrid');if(!c)return;
+  let html='<div class="hdr-row">';
+  for(let d=1;d<=DIM;d++)html+=`<div class="hdr-d">${d}</div>`;
+  html+='</div>';
+  HABITS.forEach(h=>{
+    let streak=0,tot=0;
+    for(let d=TD;d>=1;d--){if(S.habits[`${Y}-${p2(M+1)}-${p2(d)}_${h.key}`])streak++;else break;}
+    for(let d=1;d<=TD;d++)if(S.habits[`${Y}-${p2(M+1)}-${p2(d)}_${h.key}`])tot++;
+    const pct=Math.round(tot/TD*100);
+    html+=`<div class="h-row">
+      <div class="h-info"><span class="h-emoji">${h.emoji}</span><span class="h-lbl">${h.label}</span></div>
+      <div class="h-cells">`;
+    for(let d=1;d<=DIM;d++){
+      const ds=`${Y}-${p2(M+1)}-${p2(d)}`;const ck=ds+'_'+h.key;
+      const done=!!S.habits[ck],fut=d>TD;
+      html+=`<div class="hc ${done?'hc-on':''} ${fut?'hc-fut':''}"
+        style="${done?`background:${h.color};box-shadow:0 0 4px ${h.color}44`:''}"
+        ${!fut?`onclick="tH('${ck}')"`:''}></div>`;
+    }
+    html+=`</div>
+      <div class="h-stats">
+        <span class="hstreak">🔥${streak}</span>
+        <span class="hpct">${pct}%</span>
+      </div>
+    </div>`;
+  });
+  c.innerHTML=html;
+  renderHabitStats();renderDashHabits();
+}
+function tH(key){S.habits[key]=!S.habits[key];save();renderHabits();refreshDash();}
+
+function renderHabitStats(){
+  const c=document.getElementById('habitStatGrid');if(!c)return;
+  const n=new Date();const Y=n.getFullYear(),M=n.getMonth(),TD=n.getDate();
+  c.innerHTML=HABITS.map(h=>{
+    let tot=0;
+    for(let d=1;d<=TD;d++)if(S.habits[`${Y}-${p2(M+1)}-${p2(d)}_${h.key}`])tot++;
+    const pct=Math.round(tot/TD*100);
+    return`<div class="card" style="padding:18px;border-color:${h.color}14;">
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;">
+        <span style="font-size:17px;">${h.emoji}</span>
+        <span style="font-size:11.5px;font-weight:600;color:var(--t1);">${h.label}</span>
+      </div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:300;line-height:1;color:${h.color};">${pct}<span style="font-size:16px;opacity:.5;">%</span></div>
+      <div style="font-size:10.5px;color:var(--t1);margin:4px 0 10px;">${tot}/${TD} jours</div>
+      <div class="pbar pbar-md"><div class="pfill" style="background:${h.color};width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function renderDashHabits(){
+  const c=document.getElementById('dashHabits');if(!c)return;
+  const ds=tds();let done=0;
+  c.innerHTML=HABITS.map(h=>{
+    const ck=ds+'_'+h.key;const ch=!!S.habits[ck];if(ch)done++;
+    return`<div class="card" style="padding:14px;cursor:pointer;
+      border-color:${ch?h.color+'28':'var(--b1)'};
+      background:${ch?h.color+'08':'var(--s1)'};transition:all .2s;"
+      onclick="tHD('${ck}')">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <div style="font-size:20px;">${h.emoji}</div>
+        <div style="flex:1;">
+          <div style="font-size:12.5px;font-weight:600;${ch?'color:'+h.color:''}">${h.label}</div>
+          <div style="font-size:10.5px;color:var(--t1);margin-top:2px;">${ch?'✓ Fait':'À faire'}</div>
+        </div>
+        <div style="width:17px;height:17px;border-radius:50%;border:1.5px solid ${ch?h.color:'var(--b2)'};background:${ch?h.color:'transparent'};display:flex;align-items:center;justify-content:center;font-size:9px;color:#071a0d;">${ch?'✓':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  const b=document.getElementById('dashHabitBadge');if(b)b.textContent=`${done} / ${HABITS.length}`;
+}
+function tHD(key){S.habits[key]=!S.habits[key];save();renderDashHabits();}
+
+/* ═══ ROUTINE ═══ */
+const ROUTINE=[
+  {key:'sport',  label:'Sport',   emoji:'🏃'},
+  {key:'code',   label:'Code',    emoji:'💻'},
+  {key:'travail',label:'Travail', emoji:'📖'},
+  {key:'lire',   label:'Lecture', emoji:'📚'},
+  {key:'langues',label:'Langues', emoji:'🌍'},
+  {key:'social', label:'Social',  emoji:'👥'},
+];
+let weekChart=null;
+function renderRoutine(){
+  const c=document.getElementById('routineGrid');if(!c)return;
+  const ds=tds();let done=0;
+  c.innerHTML=ROUTINE.map(r=>{
+    const ck=`rt_${ds}_${r.key}`;const d=!!S.routine[ck];if(d)done++;
+    return`<div class="r-item ${d?'done':''}" onclick="tR('${ck}')">
+      <div class="r-emo">${r.emoji}</div>
+      <div class="r-lbl">${r.label}</div>
+      <div class="r-check">${d?'✓':''}</div>
+    </div>`;
+  }).join('');
+  const b=document.getElementById('routineBadge');if(b)b.textContent=`${done}/${ROUTINE.length}`;
+  refreshRoutineKPI(done);
+}
+function tR(key){S.routine[key]=!S.routine[key];save();renderRoutine();refreshRoutineKPI();}
+function renderGoals(){
+  const c=document.getElementById('goalGrid');if(!c)return;
+  c.innerHTML=ROUTINE.map(r=>{
+    const gk=`goal_rt_${r.key}`;
+    const val=(S.life&&S.life[gk])||'';
+    return`<div class="goal-item">
+      <div class="goal-item-hd">
+        <span class="goal-emo">${r.emoji}</span>
+        <span class="goal-name">${r.label}</span>
+      </div>
+      <textarea class="goal-inp" id="${gk}" placeholder="Objectif pour ${r.label}…" oninput="sL('${gk}')">${val}</textarea>
+
+```
+</div>`;
+```
+
+}).join(’’);
+}
+function refreshRoutineKPI(done){
+if(done===undefined){const ds=tds();done=ROUTINE.filter(r=>S.routine[`rt_${ds}_${r.key}`]).length;}
+const e=document.getElementById(‘kpiRoutine’);const b=document.getElementById(‘kpiRoutineBar’);
+if(e)e.textContent=`${done}/${ROUTINE.length}`;if(b)b.style.width=(done/ROUTINE.length*100)+’%’;
+}
+function renderWeekChart(){
+const ctx=document.getElementById(‘weekChart’);if(!ctx)return;
+if(weekChart){weekChart.destroy();weekChart=null;}
+const n=new Date();const labels=[],data=[];
+for(let i=6;i>=0;i–){
+const d=new Date(n);d.setDate(n.getDate()-i);
+const ds=`${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`;
+labels.push(WS[d.getDay()]);
+data.push(ROUTINE.filter(r=>S.routine[`rt_${ds}_${r.key}`]).length);
+}
+weekChart=new Chart(ctx.getContext(‘2d’),{
+type:‘bar’,
+data:{labels,datasets:[{data,
+backgroundColor:data.map(v=>v>=5?‘rgba(74,222,128,0.65)’:v>=3?‘rgba(74,222,128,0.3)’:‘rgba(255,255,255,0.055)’),
+borderRadius:5,borderSkipped:false}]},
+options:{responsive:true,maintainAspectRatio:false,animation:{duration:250},
+plugins:{legend:{display:false}},
+scales:{
+x:{grid:{display:false},ticks:{color:’#5E5D56’,font:{size:10.5,family:‘DM Sans’}},border:{display:false}},
+y:{grid:{color:‘rgba(255,255,255,0.035)’},ticks:{color:’#5E5D56’,stepSize:1,font:{size:9,family:‘DM Sans’}},max:6,border:{display:false}},
+}
+}
+});
+}
+
+/* ═══ LIFE FIELDS ═══ */
+function sL(k){if(!S.life)S.life={};S.life[k]=document.getElementById(k).value;save();}
+function loadL(){
+const fs=[‘hair_s’,‘hair_r’,‘skin_s’,‘skin_r’,‘style_v’,‘style_p’,‘phys_g’,‘phys_p’,
+‘emo_n’,‘mind_pb’,‘mind_sl’,‘mind_rt’,‘mind_go’,‘mind_af’,
+‘soc_gf’,‘soc_gf2’,‘soc_fm’,‘soc_fm2’,‘soc_fr’,‘soc_fr2’,‘soc_px’,‘soc_go’];
+fs.forEach(f=>{const e=document.getElementById(f);if(e&&S.life&&S.life[f])e.value=S.life[f];});
+}
+
+/* ═══ RATINGS ═══ */
+function initR(cid,sk,color=’#4ADE80’){
+const c=document.getElementById(cid);if(!c)return;
+const cur=S.ratings[sk]||0;
+c.innerHTML=[1,2,3,4,5].map(n=>`<div class="rd ${n<=cur?'on':''}" style="${n<=cur?`background:${color};border-color:${color};color:#071a0d;box-shadow:0 0 7px ${color}30`:''}" onclick="setR('${sk}','${cid}',${n},'${color}')">${n}</div>`).join(’’);
+}
+function setR(k,cid,v,c){S.ratings[k]=v;save();initR(cid,k,c);}
+function initAllR(){
+initR(‘rr_hair’,‘rr_hair’,’#D8CCAC’);initR(‘rr_skin’,‘rr_skin’,’#86EFAC’);
+initR(‘rr_style’,‘rr_style’,’#A3BFA0’);initR(‘rr_phys’,‘rr_phys’,’#4ADE80’);
+initR(‘rr_mg’,‘rr_mg’,’#A3BFA0’);initR(‘rr_md’,‘rr_md’,’#86EFAC’);
+initR(‘rr_gf’,‘rr_gf’,’#D8CCAC’);initR(‘rr_fm’,‘rr_fm’,’#D8CCAC’);
+initR(‘rr_fr’,‘rr_fr’,’#4ADE80’);initR(‘rr_sc’,‘rr_sc’,’#22C55E’);
+}
+
+/* ═══ EMOTIONS ═══ */
+const EMOS=[‘😄 Super’,‘😊 Bien’,‘😐 Neutre’,‘😕 Bof’,‘😔 Triste’,‘😤 Frustré’,‘😰 Stressé’,‘🔥 Motivé’,‘💪 Fort’,‘😴 Fatigué’];
+function initEmos(){
+const c=document.getElementById(‘emoRow’);if(!c)return;
+c.innerHTML=EMOS.map(e=>`<div class="ep ${(S.emos||[]).includes(e)?'on':''}" onclick="tE('${e}',this)">${e}</div>`).join(’’);
+}
+function tE(e,el){
+if(!S.emos)S.emos=[];
+const i=S.emos.indexOf(e);
+if(i===-1){S.emos.push(e);el.classList.add(‘on’);}else{S.emos.splice(i,1);el.classList.remove(‘on’);}
+save();
+}
+
+/* ═══ DASHBOARD ═══ */
+function refreshDash(){refreshScoreKPI();refreshFinKPI();refreshRoutineKPI();renderDashHabits();}
+
+/* ═══ TOAST ═══ */
+function toast(msg,icon=’·’){
+const c=document.getElementById(‘toasts’);
+const t=document.createElement(‘div’);t.className=‘toast’;
+t.innerHTML=`<span>${icon}</span>${msg}`;c.appendChild(t);
+setTimeout(()=>{t.style.opacity=‘0’;t.style.transform=‘translateX(14px)’;t.style.transition=‘all .28s’;setTimeout(()=>t.remove(),280);},2300);
+}
+
+/* ═══ MODAL ═══ */
+document.querySelectorAll(’.overlay’).forEach(o=>o.addEventListener(‘click’,e=>{if(e.target===o)o.classList.remove(‘open’);}));
+
+/* ═══ INIT ═══ */
+function init(){
+load();initDates();buildRadar();buildSliders();
+refreshDash();renderHabits();loadL();initAllR();initEmos();renderRoutine();renderGoals();
+}
+init();
+</script>
+
+</body>
+</html>
