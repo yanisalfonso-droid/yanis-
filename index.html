@@ -400,5 +400,47 @@ render()
 
 </script>
 
+<script>
+
+/* correction automatique du site */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+/* corrige variables CSS */
+const styles=document.querySelectorAll("style")
+
+styles.forEach(style=>{
+style.innerHTML=style.innerHTML.replace(/–/g,"--")
+})
+
+/* corrige guillemets */
+document.body.innerHTML=document.body.innerHTML
+.replace(/‘|’/g,"'")
+.replace(/“|”/g,'"')
+
+/* amélioration animation cartes */
+
+const css=`
+.card{
+transition:0.25s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+box-shadow:
+0 10px 30px rgba(0,0,0,0.5),
+0 0 20px rgba(74,222,128,0.05);
+}
+`
+
+const s=document.createElement("style")
+
+s.innerHTML=css
+
+document.head.appendChild(s)
+
+})
+
+</script>
 </body>
 </html>
